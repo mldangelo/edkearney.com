@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import moment from 'moment';
 import leftPad from 'left-pad';
 
-import logo from './logo.svg';
 import './App.css';
 
 class App extends Component {
@@ -40,7 +39,6 @@ class App extends Component {
   }
 
   tick() {
-    const end = this.state.end;
     this.setState({
       now: Date.now()
     });
