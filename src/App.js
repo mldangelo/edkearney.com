@@ -9,7 +9,6 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    const endTime = moment('07/25/2018 17:00:00', 'MM/DD/YYYY hh:mm:ss'); //.format('x')
     this.state = {
       end: moment('07/25/2018 17:00:00', 'MM/DD/YYYY hh:mm:ss'),
       now: Date.now(),
@@ -24,7 +23,6 @@ class App extends Component {
     clearInterval(this.timer);
   }
 
-
   getTime() {
     const duration = moment.duration(this.state.end.diff(this.state.now));
     const days = Math.floor(duration.as('days'));
@@ -32,11 +30,13 @@ class App extends Component {
     const minutes = Math.floor(duration.as('minutes') % 60);
     const seconds = Math.floor(duration.as('seconds') % 60);
     const ms = Math.floor(duration.as('milliseconds') % 1000);
-    return { days,
-      hours:  leftPad(hours,2,0),
+    return {
+      days,
+      hours: leftPad(hours,2,0),
       minutes: leftPad(minutes,2,0),
       seconds: leftPad(seconds,2,0),
-      ms: leftPad(ms,3,0) };
+      ms: leftPad(ms,3,0)
+    };
   }
 
   tick() {
@@ -51,7 +51,8 @@ class App extends Component {
     return (
       <div className = "timer">
        <div className="container">
-        <p> {days} days, {hours} hours, {minutes} minutes, {seconds} seconds, {ms} milliseconds.</p>
+        { (this.state.end.format('x') - this.state.now > 0) ?
+        <p> {days} days, {hours} hours, {minutes} minutes, {seconds} seconds, {ms} milliseconds.</p> : <p> Fuck Off </p>}
       </div>
       </div>
 
