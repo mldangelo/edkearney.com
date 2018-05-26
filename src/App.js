@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import moment from 'moment';
+import moment from 'moment-timezone';
 import leftPad from 'left-pad';
 
 import './App.css';
@@ -9,7 +9,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      end: moment('07/25/2018 17:00:00', 'MM/DD/YYYY hh:mm:ss'),
+      end: moment.tz("2018-07-06 17:00", "America/Los_Angeles"),
       now: Date.now(),
     };
   }
