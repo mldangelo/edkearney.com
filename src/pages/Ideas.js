@@ -11,15 +11,15 @@ const markdown = raw('../data/ideas.md');
 // Make all hrefs react router links
 const LinkRenderer = ({ ...children }) => <Link {...children} />;
 
-const About = () => (
+const Ideas = () => (
   <Main
     title="About"
     description="Good Ideas from Ed Kearney"
   >
-    <article className="post markdown" id="about">
+    <article className="post markdown" id="ideas">
       <header>
         <div className="title">
-          <h2 data-testid="heading"><Link to="/about">Ideas</Link></h2>
+          <h2 data-testid="heading"><Link to="/ideas">Ideas</Link></h2>
         </div>
       </header>
       <ReactMarkdown
@@ -33,4 +33,4 @@ const About = () => (
   </Main>
 );
 
-export default About;
+export default Ideas;
