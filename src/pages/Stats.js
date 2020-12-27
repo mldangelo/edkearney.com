@@ -3,22 +3,22 @@ import { Link } from 'react-router-dom';
 
 import Main from '../layouts/Main';
 
-import Personal from '../components/Stats/Personal';
-import Site from '../components/Stats/Site';
+import Table from '../components/Stats/Table';
+import data from '../data/stats/personal';
 
 const Stats = () => (
   <Main
-    title="Stats"
+    title="Stats and Facts"
     description="Some statistics about Ed Kearney and edkearney.com"
   >
     <article className="post" id="stats">
       <header>
         <div className="title">
-          <h2 data-testid="heading"><Link to="/stats">Stats</Link></h2>
+          <h2 data-testid="heading"><Link to="/stats">Stats & Facts</Link></h2>
         </div>
       </header>
-      <Personal />
-      <Site />
+      <h3>Some stats and facts about me</h3>
+      <Table data={data} />
     </article>
   </Main>
 );
