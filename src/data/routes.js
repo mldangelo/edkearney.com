@@ -13,6 +13,10 @@ const routes = [
     path: '/projects',
   },
   {
+    label: 'Ideas',
+    path: '/ideas',
+  },
+  {
     label: 'Stats',
     path: '/stats',
   },

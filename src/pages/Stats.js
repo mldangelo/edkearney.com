@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import Main from '../layouts/Main';
 
 import Table from '../components/Stats/Table';
-import data from '../data/stats/personal';
+import data from '../data/stats';
 
 const Stats = () => (
   <Main
