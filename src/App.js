@@ -1,62 +1,35 @@
-import React, { Component } from 'react';
-import moment from 'moment-timezone';
-import leftPad from 'left-pad';
+import React, { Suspense, lazy } from 'react';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import Main from './layouts/Main'; // fallback for lazy pages
+import './static/css/main.scss'; // All of our styles
 
-import './App.css';
+const { PUBLIC_URL } = process.env;
 
-class App extends Component {
+// Every route - we lazy load so that each page can be chunked
+// NOTE that some of these chunks are very small. We should optimize
+// which pages are lazy loaded in the future.
+const About = lazy(() => import('./pages/About'));
+const Contact = lazy(() => import('./pages/Contact'));
+const Index = lazy(() => import('./pages/Index'));
+const NotFound = lazy(() => import('./pages/NotFound'));
+const Projects = lazy(() => import('./pages/Projects'));
+const Resume = lazy(() => import('./pages/Resume'));
+const Stats = lazy(() => import('./pages/Stats'));
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      end: moment.tz("2018-07-06 17:00", "America/Los_Angeles"),
-      now: Date.now(),
-    };
-  }
-
-  componentDidMount() {
-    this.timer = setInterval(() => this.tick(), 2);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.timer);
-  }
-
-  getTime() {
-    const duration = moment.duration(this.state.end.diff(this.state.now));
-    const days = Math.floor(duration.as('days'));
-    const hours = Math.floor(duration.as('hours') % 24);
-    const minutes = Math.floor(duration.as('minutes') % 60);
-    const seconds = Math.floor(duration.as('seconds') % 60);
-    const ms = Math.floor(duration.as('milliseconds') % 1000);
-    return {
-      days,
-      hours: leftPad(hours,2,0),
-      minutes: leftPad(minutes,2,0),
-      seconds: leftPad(seconds,2,0),
-      ms: leftPad(ms,3,0)
-    };
-  }
-
-  tick() {
-    this.setState({
-      now: Date.now()
-    });
-  }
-
-  render() {
-    const { days, hours, minutes, seconds, ms } = this.getTime();
-    return (
-      <div className = "timer">
-       <div className="container">
-        { (this.state.end.format('x') - this.state.now > 0) ?
-        <p> {days} days, {hours} hours, {minutes} minutes, {seconds} seconds, {ms} milliseconds.</p> : <p> Fuck Off </p>}
-      </div>
-      </div>
-
-    );
-  }
-}
+const App = () => (
+  <BrowserRouter basename={PUBLIC_URL}>
+    <Suspense fallback={<Main />}>
+      <Switch>
+        <Route exact path="/" component={Index} />
+        <Route path="/about" component={About} />
+        <Route path="/projects" component={Projects} />
+        <Route path="/stats" component={Stats} />
+        <Route path="/contact" component={Contact} />
+        <Route path="/resume" component={Resume} />
+        <Route component={NotFound} status={404} />
+      </Switch>
+    </Suspense>
+  </BrowserRouter>
+);
 
 export default App;
-// july 25th

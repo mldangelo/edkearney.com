@@ -1,10 +1,12 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import { hydrate, render } from 'react-dom';
 import App from './App';
-// import registerServiceWorker from './registerServiceWorker';
-import { unregister } from './registerServiceWorker';
 
-ReactDOM.render(<App />, document.getElementById('root'));
-// registerServiceWorker();
-unregister();
+const rootElement = document.getElementById('root');
+
+// hydrate is required by react-snap.
+if (rootElement.hasChildNodes()) {
+  hydrate(<App />, rootElement);
+} else {
+  render(<App />, rootElement);
+}
