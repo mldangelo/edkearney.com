@@ -1,31 +1,170 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Ed Kearney</title>
-	<style>
-		body {
-			margin: 0;
-			padding: 0;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			height: 100vh;
-			font-family: Arial, sans-serif;
-			font-size: 24px;
-		}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ed Kearney</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        font-family: "Comic Sans MS", "Segoe UI", Tahoma, Geneva, Verdana,
+          sans-serif;
+        background-color: #f0f0f0;
+        color: #333;
+        transition: background-color 0.5s;
+        overflow: hidden;
+      }
+      .container {
+        text-align: center;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        position: absolute;
+        transition: background-color 0.5s;
+        animation: growShrink 2s infinite alternate ease-in-out;
+      }
 
-		a {
-			color: #000;
-			text-decoration: none;
-			font-weight: bold;
-		}
+      @keyframes growShrink {
+        0% {
+          transform: scale(1);
+        }
+        100% {
+          transform: scale(1.25);
+        }
+      }
 
-		a:hover {
-			color: #999;
-		}
-	</style>
-</head>
-<body>
-	<a href="https://www.linkedin.com/in/edward-kearney/">Ed Kearney</a>
-</body>
+      a {
+        color: #007bff;
+        text-decoration: none;
+        font-weight: bold;
+      }
+      a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+      }
+      footer {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        background-color: #333;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <a href="https://www.linkedin.com/in/edward-kearney/">Ed Kearney</a>
+    </div>
+    <footer>&copy; 2003 Ed Kearney. All rights reserved.</footer>
+
+    <script>
+      const container = document.querySelector(".container");
+      let containerX = window.innerWidth / 2;
+      let containerY = window.innerHeight / 2;
+      container.style.left = `${containerX}px`;
+      container.style.top = `${containerY}px`;
+
+      function moveRandomly() {
+        const randomX = Math.random() * 20 - 10;
+        const randomY = Math.random() * 20 - 10;
+        containerX += randomX;
+        containerY += randomY;
+        containerX = Math.max(
+          0,
+          Math.min(window.innerWidth - container.offsetWidth, containerX),
+        );
+        containerY = Math.max(
+          0,
+          Math.min(window.innerHeight - container.offsetHeight, containerY),
+        );
+
+        container.style.left = `${containerX}px`;
+        container.style.top = `${containerY}px`;
+
+        setTimeout(moveRandomly, 100);
+      }
+
+      function changeBackgroundColor() {
+        const getRandomColor = () => {
+          const letters = "0123456789ABCDEF";
+          let color = "#";
+          for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+          }
+          return color;
+        };
+        document.body.style.backgroundColor = getRandomColor();
+      }
+
+      function teleportIfTrapped() {
+        const threshold = 50;
+        if (
+          containerX <= threshold ||
+          containerX >= window.innerWidth - container.offsetWidth - threshold ||
+          containerY <= threshold ||
+          containerY >= window.innerHeight - container.offsetHeight - threshold
+        ) {
+          containerX =
+            Math.random() * (window.innerWidth - container.offsetWidth);
+          containerY =
+            Math.random() * (window.innerHeight - container.offsetHeight);
+          container.style.left = `${containerX}px`;
+          container.style.top = `${containerY}px`;
+        }
+      }
+
+      document.addEventListener("mousemove", (e) => {
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        const diffX = containerX - mouseX;
+        const diffY = containerY - mouseY;
+
+        const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+
+        if (distance < 150) {
+          containerX += (diffX / distance) * 20;
+          containerY += (diffY / distance) * 20;
+        }
+        containerX = Math.max(
+          0,
+          Math.min(window.innerWidth - container.offsetWidth, containerX),
+        );
+        containerY = Math.max(
+          0,
+          Math.min(window.innerHeight - container.offsetHeight, containerY),
+        );
+
+        container.style.left = `${containerX}px`;
+        container.style.top = `${containerY}px`;
+        teleportIfTrapped();
+      });
+
+      function slowPrint(message, interval) {
+        let index = 0;
+        const printNextChar = () => {
+          if (index < message.length) {
+            console.log(message[index]);
+            index++;
+            setTimeout(printNextChar, interval);
+          }
+        };
+        printNextChar();
+      }
+
+      moveRandomly();
+      setInterval(changeBackgroundColor, 1000);
+      slowPrint("Hello and welcome to my website", 500);
+    </script>
+  </body>
 </html>
