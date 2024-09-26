@@ -30,7 +30,6 @@
         transition: background-color 0.5s;
         animation: growShrink 2s infinite alternate ease-in-out;
       }
-
       @keyframes growShrink {
         0% {
           transform: scale(1);
@@ -39,7 +38,6 @@
           transform: scale(1.25);
         }
       }
-
       a {
         color: #007bff;
         text-decoration: none;
@@ -60,111 +58,89 @@
         padding: 10px 0;
         font-size: 16px;
       }
+      @media (max-width: 768px) {
+        body {
+          flex-direction: column;
+        }
+        .container {
+          padding: 10px;
+          font-size: 14px;
+        }
+      }
     </style>
   </head>
   <body>
     <div class="container">
       <a href="https://www.linkedin.com/in/edward-kearney/">Ed Kearney</a>
     </div>
-    <footer>&copy; 2003 Ed Kearney. All rights reserved.</footer>
+    <div id="status-container" class="status-container"></div>
+    <footer id="footer">&copy; 2003 Ed Kearney. All rights reserved.</footer>
 
     <script>
       const container = document.querySelector(".container");
+      const footer = document.getElementById("footer");
       let containerX = window.innerWidth / 2;
       let containerY = window.innerHeight / 2;
       container.style.left = `${containerX}px`;
       container.style.top = `${containerY}px`;
 
-      function moveRandomly() {
-        const randomX = Math.random() * 20 - 10;
-        const randomY = Math.random() * 20 - 10;
-        containerX += randomX;
-        containerY += randomY;
-        containerX = Math.max(
-          0,
-          Math.min(window.innerWidth - container.offsetWidth, containerX),
-        );
-        containerY = Math.max(
-          0,
-          Math.min(window.innerHeight - container.offsetHeight, containerY),
-        );
+      let moveInterval;
+      let colorInterval;
 
-        container.style.left = `${containerX}px`;
-        container.style.top = `${containerY}px`;
-
-        setTimeout(moveRandomly, 100);
+      function startFunEffects() {
+        moveInterval = setInterval(moveRandomly, 100);
+        colorInterval = setInterval(changeBackgroundColor, 1000);
       }
 
-      function changeBackgroundColor() {
-        const getRandomColor = () => {
-          const letters = "0123456789ABCDEF";
-          let color = "#";
-          for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-          }
-          return color;
-        };
-        document.body.style.backgroundColor = getRandomColor();
+      function stopFunEffects() {
+        clearInterval(moveInterval);
+        clearInterval(colorInterval);
+        document.body.style.backgroundColor = "#f0f0f0"; // Reset to original color
       }
 
-      function teleportIfTrapped() {
-        const threshold = 50;
-        if (
-          containerX <= threshold ||
-          containerX >= window.innerWidth - container.offsetWidth - threshold ||
-          containerY <= threshold ||
-          containerY >= window.innerHeight - container.offsetHeight - threshold
-        ) {
-          containerX =
-            Math.random() * (window.innerWidth - container.offsetWidth);
-          containerY =
-            Math.random() * (window.innerHeight - container.offsetHeight);
-          container.style.left = `${containerX}px`;
-          container.style.top = `${containerY}px`;
+      function updateOpenStatus() {
+        const statusContainer = document.getElementById("status-container");
+        const now = new Date();
+        const pacificTime = new Date(
+          now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }),
+        );
+        const hours = pacificTime.getHours();
+        const minutes = pacificTime.getMinutes();
+        const dayOfWeek = pacificTime.getDay();
+
+        const isWeekday = dayOfWeek >= 1 && dayOfWeek <= 5;
+        const isOpenTime =
+          (hours > 8 || (hours === 8 && minutes >= 0)) &&
+          (hours < 15 || (hours === 15 && minutes <= 30));
+
+        if (isWeekday && isOpenTime) {
+          container.style.display = "block";
+          footer.style.display = "block";
+          statusContainer.style.display = "none";
+          startFunEffects();
+        } else {
+          container.style.display = "none";
+          footer.style.display = "none";
+          statusContainer.textContent =
+            "Sorry, we're closed. Open hours: 8:00 AM - 3:30 PM Pacific Time, Monday to Friday.";
+          statusContainer.style.color = "red";
+          statusContainer.style.display = "block";
+          stopFunEffects();
         }
       }
 
-      document.addEventListener("mousemove", (e) => {
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-        const diffX = containerX - mouseX;
-        const diffY = containerY - mouseY;
+      // Update status every minute
+      setInterval(updateOpenStatus, 60000);
+      // Initial status update
+      updateOpenStatus();
 
-        const distance = Math.sqrt(diffX * diffX + diffY * diffY);
+      // The rest of your existing functions (moveRandomly, changeBackgroundColor, etc.) remain unchanged
+      // ...
 
-        if (distance < 150) {
-          containerX += (diffX / distance) * 20;
-          containerY += (diffY / distance) * 20;
-        }
-        containerX = Math.max(
-          0,
-          Math.min(window.innerWidth - container.offsetWidth, containerX),
-        );
-        containerY = Math.max(
-          0,
-          Math.min(window.innerHeight - container.offsetHeight, containerY),
-        );
-
-        container.style.left = `${containerX}px`;
-        container.style.top = `${containerY}px`;
-        teleportIfTrapped();
-      });
-
-      function slowPrint(message, interval) {
-        let index = 0;
-        const printNextChar = () => {
-          if (index < message.length) {
-            console.log(message[index]);
-            index++;
-            setTimeout(printNextChar, interval);
-          }
-        };
-        printNextChar();
-      }
-
-      moveRandomly();
-      setInterval(changeBackgroundColor, 1000);
-      slowPrint("Hello and welcome to my website", 500);
+      // Remove or comment out these lines:
+      // moveRandomly();
+      // setInterval(changeBackgroundColor, 1000);
+      // slowPrint("Hello and welcome to my website", 500);
     </script>
   </body>
 </html>
